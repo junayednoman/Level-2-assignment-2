@@ -29,7 +29,7 @@ const createProduct = async (req: Request, res: Response) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create product',
+      message: 'Failed to create product!',
       data: error,
     });
   }
