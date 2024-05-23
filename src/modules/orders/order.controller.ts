@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import { orderServices } from './order.service';
 import { productServices } from '../products/product.service';
+import orderValidationSchema from './order.validation';
 
 // create orders
 const createOrder = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
+    const validatedOrderData = orderValidationSchema.parse(orderData);
     const productResult = await productServices.retrieveSingleProduct(
-      orderData.productId,
+      validatedOrderData.productId,
     );
 
     // check if product available
@@ -19,7 +21,7 @@ const createOrder = async (req: Request, res: Response) => {
       });
     }
 
-    if (productResult.inventory.quantity < orderData.quantity) {
+    if (productResult.inventory.quantity < validatedOrderData.quantity) {
       return res.status(404).json({
         success: false,
         message: 'Insufficient quantity available in inventory',
@@ -29,14 +31,15 @@ const createOrder = async (req: Request, res: Response) => {
 
     const updateDoc = {
       'inventory.quantity':
-        productResult.inventory.quantity - orderData.quantity,
-      'inventory.inStock': // if product quantity is 0 after making the order then set inStock 'false'
-        productResult.inventory.quantity - orderData.quantity < 1
+        productResult.inventory.quantity - validatedOrderData.quantity,
+      // if product quantity is 0 after making the order then set inStock 'false'
+      'inventory.inStock':
+        productResult.inventory.quantity - validatedOrderData.quantity < 1
           ? false
           : true,
     };
-    const result = await orderServices.insertOrderData(orderData);
-    await productServices.updateSingleProduct(orderData.productId, updateDoc);
+    const result = await orderServices.insertOrderData(validatedOrderData);
+    await productServices.updateSingleProduct(validatedOrderData.productId, updateDoc);
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',

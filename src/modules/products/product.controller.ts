@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import { productServices } from './product.service';
+import productValidationSchema from './product.validation';
 
 // create product doc
 const createProduct = async (req: Request, res: Response) => {
   try {
     const productData = req.body;
+    const validatedProductData = productValidationSchema.parse(productData);
     const productExistenceResult = await productServices.retrieveProductByName(
-      productData.name,
+      validatedProductData.name,
     );
     // check if product already exist with name
     if (productExistenceResult.length > 0) {
@@ -16,7 +18,8 @@ const createProduct = async (req: Request, res: Response) => {
         data: productExistenceResult,
       });
     }
-    const result = await productServices.insertProductData(productData);
+    const result =
+      await productServices.insertProductData(validatedProductData);
     res.status(200).json({
       success: true,
       message: 'Product created successfully!',
@@ -26,7 +29,7 @@ const createProduct = async (req: Request, res: Response) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Something went wrong!',
+      message: 'Failed to create product',
       data: error,
     });
   }
