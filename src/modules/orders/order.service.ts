@@ -6,9 +6,10 @@ const insertOrderData = async (orderData: IOrder) => {
   return result;
 };
 
-const getOrders = async () => {
-  const result = await orderModel.find();
+const getOrders = async (email: unknown) => {
+  const query = { email: email };
+  const result = await orderModel.find(email ? query : {});
   return result;
 };
 
-export const orderServices = { insertOrderData , getOrders};
+export const orderServices = { insertOrderData, getOrders };

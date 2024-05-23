@@ -14,4 +14,15 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
+// show error if route not found
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ success: false, error: 'Route not found' });
+  // next();
+});
+
+// middleware for common errors
+app.use((err: Error, req: Request, res: Response) => {
+  res.status(500).json({ success: false, error: 'Something went wrong!' });
+});
+
 export default app;

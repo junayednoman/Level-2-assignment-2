@@ -8,6 +8,7 @@ const createProduct = async (req: Request, res: Response) => {
     const productExistenceResult = await productServices.retrieveProductByName(
       productData.name,
     );
+    // check if product already exist with name
     if (productExistenceResult.length > 0) {
       return res.status(409).json({
         success: false,
@@ -32,7 +33,7 @@ const createProduct = async (req: Request, res: Response) => {
 };
 
 // get all products
-const getProduct = async (req: Request, res: Response) => {
+const getProducts = async (req: Request, res: Response) => {
   try {
     const searchTerm = req.query.searchTerm;
     const result = await productServices.retrieveProduct(searchTerm);
@@ -138,7 +139,7 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
 
 export const productController = {
   createProduct,
-  getProduct,
+  getProducts,
   getSingleProduct,
   updateSingleProduct,
   deleteSingleProduct,
