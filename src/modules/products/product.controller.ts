@@ -39,7 +39,7 @@ const createProduct = async (req: Request, res: Response) => {
 const getProducts = async (req: Request, res: Response) => {
   try {
     const searchTerm = req.query.searchTerm;
-    const result = await productServices.retrieveProduct(searchTerm);
+    const result = await productServices.retrieveProducts(searchTerm);
     res.status(200).json({
       success: true,
       message: searchTerm
