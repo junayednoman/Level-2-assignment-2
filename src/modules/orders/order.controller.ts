@@ -39,13 +39,16 @@ const createOrder = async (req: Request, res: Response) => {
           : true,
     };
     const result = await orderServices.insertOrderData(validatedOrderData);
-    await productServices.updateSingleProduct(validatedOrderData.productId, updateDoc);
+    await productServices.updateSingleProduct(
+      validatedOrderData.productId,
+      updateDoc,
+    );
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
       data: result,
     });
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({
       success: false,
@@ -73,7 +76,7 @@ const getOrders = async (req: Request, res: Response) => {
         : 'Orders fetched successfully!',
       data: result,
     });
-  } catch (error: unknown) {
+  } catch (error: any) {
     console.log(error);
     res.status(500).json({
       success: false,

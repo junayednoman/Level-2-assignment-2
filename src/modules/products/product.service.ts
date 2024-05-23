@@ -6,7 +6,7 @@ const insertProductData = async (productData: TProduct) => {
   return result;
 };
 
-const retrieveProduct = async (searchTerm: unknown) => {
+const retrieveProduct = async (searchTerm: any) => {
   // generate regax with searchTerm
   const sarchRegax = new RegExp(searchTerm, 'i');
   const query = {};
@@ -33,7 +33,7 @@ const retrieveSingleProduct = async (id: string) => {
   return result;
 };
 
-const updateSingleProduct = async (id: string, updateDoc: unknown) => {
+const updateSingleProduct = async (id: string, updateDoc: any) => {
   const query = { _id: id };
   const result = await productModel.updateOne(query, updateDoc);
   return result;
